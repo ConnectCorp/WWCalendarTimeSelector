@@ -584,8 +584,18 @@ public class WWCalendarTimeSelector: UIViewController, UITableViewDelegate, UITa
     private var multipleDatesLastAdded: NSDate?
     private var flashDate: NSDate?
     private let defaultTopPanelTitleForMultipleDates = "Select Multiple Dates"
-    private let portraitHeight: CGFloat = max(UIScreen.mainScreen().bounds.height, UIScreen.mainScreen().bounds.width)
-    private let portraitWidth: CGFloat = min(UIScreen.mainScreen().bounds.height, UIScreen.mainScreen().bounds.width)
+    private var viewBoundsHeight: CGFloat {
+        return view.bounds.height - topLayoutGuide.length - bottomLayoutGuide.length
+    }
+    private var viewBoundsWidth: CGFloat {
+        return view.bounds.width
+    }
+    private var portraitHeight: CGFloat {
+        return max(viewBoundsHeight, viewBoundsWidth)
+    }
+    private var portraitWidth: CGFloat {
+        return min(viewBoundsHeight, viewBoundsWidth)
+    }
     private var isSelectingStartRange: Bool = true { didSet { rangeStartLabel.textColor = isSelectingStartRange ? optionSelectorPanelFontColorDateHighlight : optionSelectorPanelFontColorDate; rangeEndLabel.textColor = isSelectingStartRange ? optionSelectorPanelFontColorDate : optionSelectorPanelFontColorDateHighlight } }
     private var shouldResetRange: Bool = true
     
@@ -734,7 +744,7 @@ public class WWCalendarTimeSelector: UIViewController, UITableViewDelegate, UITa
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         if orientation == .LandscapeLeft || orientation == .LandscapeRight || orientation == .Portrait || orientation == .PortraitUpsideDown {
             let isPortrait = orientation == .Portrait || orientation == .PortraitUpsideDown
-            let size = view.bounds.size
+            let size = CGSizeMake(viewBoundsWidth, viewBoundsHeight)
             
             topContainerWidthConstraint.constant = isPortrait ? optionShowTopContainer ? portraitContainerWidth : 0 : landscapeTopContainerWidth
             topContainerHeightConstraint.constant = isPortrait ? portraitTopContainerHeight : optionShowTopContainer ? landscapeContainerHeight : 0
